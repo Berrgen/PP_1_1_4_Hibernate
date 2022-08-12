@@ -8,7 +8,6 @@ import org.hibernate.Transaction;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
-    long count = 0;
 
     public UserDaoHibernateImpl() {
 
@@ -19,8 +18,8 @@ public class UserDaoHibernateImpl implements UserDao {
         Transaction transaction = null;
         try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            String sqlCommand = "CREATE TABLE IF NOT EXISTS user_test (id BIGINT NOT NULL, firstname VARCHAR(255) NOT NULL, " +
-                    "lastname VARCHAR(255) NOT NULL, age TINYINT NOT NULL)";
+            String sqlCommand = "CREATE TABLE IF NOT EXISTS user_test (id BIGINT NOT NULL AUTO_INCREMENT, firstname VARCHAR(255) NOT NULL, " +
+                    "lastname VARCHAR(255) NOT NULL, age TINYINT NOT NULL, PRIMARY KEY (id))";
             session.createSQLQuery(sqlCommand)
                     .addEntity(User.class)
                     .executeUpdate();
@@ -61,7 +60,6 @@ public class UserDaoHibernateImpl implements UserDao {
             transaction = session.beginTransaction();
 
             User user = new User(name, lastName, age);
-            user.setId(count++);
             session.save(user);
 
             transaction.commit();
@@ -98,7 +96,7 @@ public class UserDaoHibernateImpl implements UserDao {
         List<User> list = null;
         Session session = Util.getSessionFactory().openSession();
 
-        String sqlCommand = "select u.* from user_test u";
+        String sqlCommand = "select * from user_test";
         list = session.createSQLQuery(sqlCommand)
                 .addEntity(User.class)
                 .getResultList();
